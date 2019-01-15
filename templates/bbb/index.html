@@ -1,0 +1,98 @@
+
+{% extends 'bbb/base.html' %}
+
+
+{% block main %}
+<div class="row">
+<div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Create Meeting </h4>
+
+                  <form action="{% url 'create' %}" method="POST" class="forms-sample">
+                      {% csrf_token %}
+                    <div class="form-group">
+                      <label for="exampleInputName1">Name</label>
+                      <input type="text"  name="name" class="form-control" id="exampleInputName1" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleInputMeetingId">Meeting ID</label>
+                      <input type="text" name="meeting_id"  class="form-control" id="exampleInputMeetingId" placeholder="Meeting ID">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleInputaPassword4">Attendee Password</label>
+                      <input name="attendee_pw" type="password" class="form-control" id="exampleInputaPassword4" placeholder="Atendee Passwd">
+                    </div>
+
+
+
+                    <div class="form-group">
+                      <label for="exampleInputmPassword4">Moderator Password</label>
+                      <input name="moderator_pw" type="password" class="form-control" id="exampleInputmPassword4" placeholder="Moderator Passwd">
+                    </div>
+
+
+                    <button type="submit" class="btn btn-success mr-2">Submit</button>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+
+
+<div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Meeting List </h4>
+
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Meeting ID</th>
+                          <th>Attende PW</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                       {% for meeting in meetings %}-
+                         <tr>
+                          <td>{{meeting.meeting_id}}</td>
+                          <td>{{meeting.attendee_pw}}</td>
+                          <td>
+                              {% if meeting.running == 'true' %}
+                                 <label class="badge badge-success">running</label>
+                              {% else  %}
+                                <label class="badge badge-danger">not running</label>
+                              {%endif%}
+                          </td>
+                          <td>
+
+                                <a class="badge badge-info" href="{% url 'join_get' meeting.meeting_id moderator_pw  fullname %}">join get
+
+                          </td>
+                         </tr>
+                        {% endfor %}
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+    </div>
+</div>
+{% endblock %}
+
+<!--{% for meeting in meetings %}-->
+
+
+    <!--<p>-->
+        <!--<b>ID</b> :  {{meeting.meeting_id}} | <b>Attende PW</b> : {{meeting.attendee_pw}} | <b> Running </b> :  {{meeting.running}}-->
+         <!---->
+    <!--</p>-->
+
+
+<!--{% endfor %}-->

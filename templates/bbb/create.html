@@ -1,0 +1,12 @@
+<h1>Created</h1>
+{{result}}
+
+<hr>
+
+<form action="{% url 'join' %}" method="POST">
+    {%csrf_token%}
+
+   {{form.as_p}}
+
+    <input type="submit" value="Join"/>
+</form>
