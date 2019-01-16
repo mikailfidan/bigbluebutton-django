@@ -34,7 +34,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-success mr-2">Submit</button>
+                    <button type="submit" class="btn btn-success mr-2">Create</button>
 
                   </form>
                 </div>
@@ -62,18 +62,20 @@
                          <tr>
                           <td>{{meeting.meeting_id}}</td>
                           <td>{{meeting.attendee_pw}}</td>
-                          <td>
+
                               {% if meeting.running == 'true' %}
+                              <td>
                                  <label class="badge badge-success">running</label>
+                                 <a class="badge badge-danger" href="{% url 'end_meeting' meeting.meeting_id moderator_pw %}">end meeting</a>
+                              </td>
                               {% else  %}
-                                <label class="badge badge-danger">not running</label>
+                               <td>
+                                 <a href="#"> <label class="badge badge-secondary">not running</label> </a>
+                                 <a class="badge badge-info" href="{% url 'join_get' meeting.meeting_id moderator_pw  fullname %}">join as mod
+                                </td>
+
                               {%endif%}
-                          </td>
-                          <td>
 
-                                <a class="badge badge-info" href="{% url 'join_get' meeting.meeting_id moderator_pw  fullname %}">join get
-
-                          </td>
                          </tr>
                         {% endfor %}
 
@@ -86,13 +88,3 @@
 </div>
 {% endblock %}
 
-<!--{% for meeting in meetings %}-->
-
-
-    <!--<p>-->
-        <!--<b>ID</b> :  {{meeting.meeting_id}} | <b>Attende PW</b> : {{meeting.attendee_pw}} | <b> Running </b> :  {{meeting.running}}-->
-         <!---->
-    <!--</p>-->
-
-
-<!--{% endfor %}-->

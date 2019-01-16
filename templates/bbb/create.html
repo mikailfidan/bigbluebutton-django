@@ -1,12 +1,59 @@
-<h1>Created</h1>
-{{result}}
+{% extends 'bbb/base.html' %}
 
-<hr>
+{% block main %}
 
-<form action="{% url 'join' %}" method="POST">
-    {%csrf_token%}
 
-   {{form.as_p}}
 
-    <input type="submit" value="Join"/>
-</form>
+
+    <div class="card-body">
+                  <a href="/" class="btn btn-sm btn-outline-secondary">back home </a>
+                <hr>
+{% if error != 'false' %}
+
+    <code> {{error}} </code>
+
+{%else %}
+                  <p class="card-description">
+
+                    <code> created successfully</code>
+                  </p>
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>
+                            ID
+                          </th>
+                          <th>
+                           Moderator PW
+                          </th>
+                          <th>
+                            Attendee PW
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            {{meetingid}}
+                          </td>
+                          <td>
+                            {{moderatorPW}}
+                          </td>
+                          <td>
+                           {{attendeePW}}
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+
+    </div>
+
+
+
+{% endif %}
+
+
+{% endblock %}
