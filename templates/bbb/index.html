@@ -3,43 +3,52 @@
 
 
 {% block main %}
+
+
 <div class="row">
-<div class="col-md-4 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
+    <div class="col-md-5 grid-margin stretch-card">
+     {% if messages %}
+
+        {% for message in messages %}
+          {% if message.tags == 'success' %}
+             <div class="p-3 m-2 alert alert-success alert-dismissible fade show" role="alert">
+          {% else %}
+              <div class="p-3 m-2 alert alert-warning alert-dismissible fade show" role="alert">
+          {% endif %}
+           {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+
+
+         <div class="card">
+            <div class="card-body">
                   <h4 class="card-title">Create Meeting </h4>
 
                   <form action="{% url 'create' %}" method="POST" class="forms-sample">
-                      {% csrf_token %}
-                    <div class="form-group">
-                      <label for="exampleInputName1">Name</label>
-                      <input type="text"  name="name" class="form-control" id="exampleInputName1" placeholder="Name">
-                    </div>
+                    {% csrf_token %}
 
-                    <div class="form-group">
-                      <label for="exampleInputMeetingId">Meeting ID</label>
-                      <input type="text" name="meeting_id"  class="form-control" id="exampleInputMeetingId" placeholder="Meeting ID">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exampleInputaPassword4">Attendee Password</label>
-                      <input name="attendee_pw" type="password" class="form-control" id="exampleInputaPassword4" placeholder="Atendee Passwd">
-                    </div>
-
-
-
-                    <div class="form-group">
-                      <label for="exampleInputmPassword4">Moderator Password</label>
-                      <input name="moderator_pw" type="password" class="form-control" id="exampleInputmPassword4" placeholder="Moderator Passwd">
-                    </div>
-
+                    {% for f in form %}
+                       <div class="form-group row">
+                          <label class="col-sm-3 col-form-label"> {{f.label}} </label>
+                          <div class="col-sm-9"> {{f}} </div>
+                       </div>
+                     {% endfor %}
 
                     <button type="submit" class="btn btn-success mr-2">Create</button>
+                 </form>
 
-                  </form>
-                </div>
-              </div>
             </div>
+        </div>
+    </div>
 
 
 <div class="col-md-6 grid-margin stretch-card">
@@ -58,32 +67,29 @@
                         </tr>
                       </thead>
                       <tbody>
-                       {% for meeting in meetings %}-
+                       {% for meeting in meetings %}
                          <tr>
                           <td>{{meeting.meeting_id}}</td>
                           <td>{{meeting.attendee_pw}}</td>
 
-                              {% if meeting.running == 'true' %}
-                              <td>
-                                 <label class="badge badge-success">running</label>
-                                 <a class="badge badge-danger" href="{% url 'end_meeting' meeting.meeting_id moderator_pw %}">end meeting</a>
-                              </td>
-                              {% else  %}
-                               <td>
-                                 <a href="#"> <label class="badge badge-secondary">not running</label> </a>
-                                 <a class="badge badge-info" href="{% url 'join_get' meeting.meeting_id moderator_pw  fullname %}">join as mod
-                                </td>
-
-                              {%endif%}
-
-                         </tr>
-                        {% endfor %}
-
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+                          {% if meeting.running == 'true' %}
+                            <td>
+                              <label class="badge badge-success">running</label>
+                              <a class="badge badge-danger" href="{% url 'end_meeting' meeting.meeting_id moderator_pw %}">end meeting</a>
+                            </td>
+                            {% else  %}
+                            <td>
+                            <a href="#"> <label class="badge badge-secondary">not running</label> </a>
+                           <a class="badge badge-info" href="{% url 'join_get' meeting.meeting_id moderator_pw  fullname %}">join as mod
+                           </td>
+                        </tr>
+                       {%endif%}
+                    {% endfor %}
+                   </tbody>
+                 </table>
+               </div>
+            </div>
+         </div>
     </div>
 </div>
 {% endblock %}

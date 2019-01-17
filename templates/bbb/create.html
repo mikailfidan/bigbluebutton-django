@@ -2,15 +2,15 @@
 
 {% block main %}
 
+{{form.as_p}}
 
 
-
-    <div class="card-body">
-                  <a href="/" class="btn btn-sm btn-outline-secondary">back home </a>
-                <hr>
+<div class="card-body">
+ <a href="/" class="btn btn-sm btn-outline-secondary">back home </a>
+ <hr>
 {% if error != 'false' %}
 
-    <code> {{error}} </code>
+ <code> {{error}} </code>
 
 {%else %}
                   <p class="card-description">

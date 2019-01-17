@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import BBBMeeting
 
-# Register your models here.
+admin.site.register(BBBMeeting)
+
+
+

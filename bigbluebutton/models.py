@@ -4,6 +4,7 @@ from hashlib import sha1
 from urllib import parse, request
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.contrib import messages
 
 
 
@@ -33,33 +34,41 @@ class BBBMeeting(models.Model):
     attendee_pw = models.CharField(max_length=100, unique=True)  
     moderator_pw = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
 
-    # === -> get_api_url ==============================================
+    # === -> request post to url encode ================================
     @classmethod
-    def get_api_url(self, call_api, parameters):
+    def request_to_url(self, request):
+
+        request.POST._mutable = True;
+        request.POST.pop('csrfmiddlewaretoken')
+        return request.POST.urlencode()
+
+
+    # === <- request post to url encode===================================
+
+
+
+    # === <- create_paramater_url ==============================================
+    @classmethod
+    def create_paramater_url(self, call_api, parameters):
         checksum_val = sha1(str(call_api + parameters + settings.BBB_SECRET).encode('utf-8')).hexdigest()
         result = '%s&checksum=%s' % (parameters, checksum_val)
         return result
 
-    # === <- get_api_url ==============================================
+    # === <- create_paramater_url ==============================================
 
 
 
     # === -> create meeting ==============================================
     @classmethod
-    def create_meeting(self, name, meeting_id, attende_pw, moderator_pw):
+    def create_meeting(self, parameters):
         call_api = 'create'
-        parameters= parse.urlencode({
-            'name': name,
-            'meetingID': meeting_id,
-            'attendeePW': attende_pw,
-            'moderatorPW': moderator_pw,
-        })
-
-        secret_url =self.get_api_url(call_api, parameters)
+        secret_url =self.create_paramater_url(call_api, parameters)
         url_api = settings.BBB_URL+call_api+'?'+secret_url
         result = soup_api(url_api)
-
+        print(url_api)
         if result:
             return result
         else:
@@ -80,7 +89,7 @@ class BBBMeeting(models.Model):
             'fullName' : full_name,
         })
 
-        secret_url = self.get_api_url(call_api, parameters)
+        secret_url = self.create_paramater_url(call_api, parameters)
         url_api = settings.BBB_URL+call_api+'?'+secret_url
         return url_api
 
@@ -97,7 +106,7 @@ class BBBMeeting(models.Model):
             'password' : password,
         })
 
-        secret_url = self.get_api_url(call_api, parameters)
+        secret_url = self.create_paramater_url(call_api, parameters)
         url_api = settings.BBB_URL+call_api+'?'+secret_url
         result = soup_api(url_api)
 
@@ -116,7 +125,7 @@ class BBBMeeting(models.Model):
     def get_meetings_list(self):
         call_api ='getMeetings'
         parameters=''
-        url_api = settings.BBB_URL+call_api+'?'+self.get_api_url(call_api, parameters)
+        url_api = settings.BBB_URL+call_api+'?'+self.create_paramater_url(call_api, parameters)
         result = soup_api(url_api)
 
         if result:
@@ -144,7 +153,7 @@ class BBBMeeting(models.Model):
     def is_running(meetingID):
         call_api ='isMeetingRunning'
         parameters = parse.urlencode({'meetingID': meetingID})
-        url_api = settings.BBB_URL + call_api + '?' + get_api_url(call_api, parameters)
+        url_api = settings.BBB_URL + call_api + '?' + create_paramater_url(call_api, parameters)
         result = soup_api(url_api)
 
         if result:
@@ -154,8 +163,27 @@ class BBBMeeting(models.Model):
         else:
             return 'error'
 
-    #=== <- get_api_url ==============================================
+    #=== <- create_paramater_url ==============================================
 
+
+    # === -> catch error messages from in api ==================================
+    @classmethod
+    def catch_messages (self,request, result):
+
+        soup = BeautifulSoup(result, 'xml')
+
+        if not soup.find('returncode'):
+            return messages.warning(request, result)
+        else:
+            if soup.find('returncode').text == 'SUCCESS' and soup.find('messageKey').text == '':
+               return messages.success(request, 'created succesfully')
+            else:
+                return messages.warning(request, soup.find('messageKey').text + ': ' + soup.find('message').text)
+
+
+
+
+    # === <- catch error messages from in api ==================================
 
 
     # print(create_meeting('wew','we','ap', 'mp'))
