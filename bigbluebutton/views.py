@@ -20,15 +20,16 @@ def index(request):
 
    open_meetings = []
    for m in BBBMeeting.get_meetings_list():
-        open_meetings.append(m['meeting_id'])
+        open_meetings.append(m['meetingID'])
 
    context = {
         'open_meetings': open_meetings,
+        'live_meetings': BBBMeeting.get_meetings_list(),
         'meetingsdb': BBBMeeting.objects.all().order_by('meetingID'),
         'form': CreateMeetingForm()
     }
 
-
+   print(BBBMeeting.get_meetings_list())
    return render(request, 'bbb/index.html', context)
 
 
@@ -40,26 +41,28 @@ def create_meeting(request, meetingID):
 
     open_meetings = []
     for m in BBBMeeting.get_meetings_list():
-        open_meetings.append(m['meeting_id'])
+        open_meetings.append(m['meetingID'])
 
     context = {
         'open_meetings': open_meetings,
+        'live_meetings': BBBMeeting.get_meetings_list(),
         'meetingsdb': BBBMeeting.objects.all().order_by('meetingID'),
         'form': CreateMeetingForm()
     }
+
     return render(request, 'bbb/index.html', context)
 
 
 
-def join_meeting(request):
-    meeting_id = request.POST.get('meeting_id')
-    full_name = request.POST.get('full_name')
-    passwd = request.POST.get('passwd')
+def join_meeting(request, meetingID):
+    meeting = BBBMeeting.objects.get(meetingID=meetingID)
+    full_name = 'User-01'
+    passwd = getattr(meeting, 'moderatorPW')
 
-    result = BBBMeeting.join_meeting(meeting_id, passwd, full_name)
-    context = {'join_url': result}
+    join_url = BBBMeeting.join_meeting(meetingID, passwd, full_name)
+    print(join_url)
 
-    return render(request, 'bbb/join.html', context)
+    return redirect(join_url)
 
 
 

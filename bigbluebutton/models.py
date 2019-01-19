@@ -149,9 +149,9 @@ class BBBMeeting(models.Model):
             meetings= []
             for meeting in meetinglist:
                 meetings.append({
-                    'meeting_id' : meeting.find('meetingID').text,
-                    'moderaotor_pw' : meeting.find('moderatorPW').text,
-                    'attendee_pw' : meeting.find('attendeePW').text,
+                    'meetingID' : meeting.find('meetingID').text,
+                    'moderaotorPW' : meeting.find('moderatorPW').text,
+                    'duration' : meeting.find('duration').text,
                     'running': meeting.find('running').text,
                     'createtime': meeting.find('createTime').text
                 })
@@ -161,7 +161,8 @@ class BBBMeeting(models.Model):
 
     # === <- meeting list  ==============================================
 
-    # === -> get meeting indo ==============================================
+
+    # === -> get meeting info ==============================================
     @classmethod
     def get_meeting_info(self, meetingID, password):
         call_api = 'getMeetingInfo'
@@ -181,9 +182,7 @@ class BBBMeeting(models.Model):
                 return 'FAILED'
 
 
-
-
-    # === -> get meeting indo ==============================================
+    # === -> get meeting info ==============================================
 
 
 

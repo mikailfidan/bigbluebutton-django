@@ -30,26 +30,70 @@
 
 
 
-         <div class="card">
-            <div class="card-body">
-                  <h4 class="card-title">Create Meeting </h4>
+         <!--<div class="card">-->
+            <!--<div class="card-body">-->
+                  <!--<h4 class="card-title">Create Meeting </h4>-->
 
-                  <form action="{% url 'index' %}" method="POST" class="forms-sample">
-                    {% csrf_token %}
+                  <!--<form action="{% url 'index' %}" method="POST" class="forms-sample">-->
+                    <!--{% csrf_token %}-->
 
-                    {% for f in form %}
-                       <div class="form-group row">
-                          <label class="col-sm-3 col-form-label"> {{f.label}} </label>
-                          <div class="col-sm-9"> {{f}} </div>
-                       </div>
-                     {% endfor %}
+                    <!--{% for f in form %}-->
+                       <!--<div class="form-group row">-->
+                          <!--<label class="col-sm-3 col-form-label"> {{f.label}} </label>-->
+                          <!--<div class="col-sm-9"> {{f}} </div>-->
+                       <!--</div>-->
+                     <!--{% endfor %}-->
 
-                    <button type="submit" class="btn btn-success mr-2">Create</button>
-                 </form>
+                    <!--<button type="submit" class="btn btn-success mr-2">Create</button>-->
+                 <!--</form>-->
 
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+
+ <div class="col grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Live Meetings  </h4>
+
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Meeting ID</th>
+                           <th>Duration</th>
+                          <th>Status</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                       {% for meeting in live_meetings %}
+
+                         <tr>
+                           <td>{{meeting.meetingID}}</td>
+                           <td> {{meeting.duration}} min </td>
+
+                             <td>
+                            {% if meeting.running == 'true' %}
+                             <span class="badge badge-success"  href="{% url 'end' meeting.meetingID %}"> running </span>
+                             {% else %}
+                                 <span class="badge badge-warning"  href="{% url 'create' meeting.meetingID %}"> notrunning </span>
+                                 <a class="badge badge-primary"  href="{% url 'join' meeting.meetingID %}"> join </a>
+                            {% endif %}
+
+                        </tr>
+
+                  {% endfor %}
+                   </tbody>
+                 </table>
+               </div>
             </div>
-        </div>
+         </div>
     </div>
+</div>
+
+
 
 
 
@@ -78,13 +122,11 @@
 
                              <td>
                             {% if meetingdb.meetingID in open_meetings %}
-                                 <a class="badge badge-danger"  href="{% url 'end' meetingdb.meetingID %}"> Stop </a>
+                                 <a class="badge badge-danger"  href="{% url 'end' meetingdb.meetingID %}"> stop </a>
+
                              {% else %}
-                                 <a class="badge badge-success"  href="{% url 'create' meetingdb.meetingID %}"> Start </a>
+                                 <a class="badge badge-success"  href="{% url 'create' meetingdb.meetingID %}"> start </a>
                             {% endif %}
-
-
-
 
                         </tr>
 
