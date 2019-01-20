@@ -10,7 +10,7 @@ from django.contrib import messages
 
 def soup_api(req):
         source = request.urlopen(req).read()
-        soup = BeautifulSoup(source, 'lxml')
+        soup = BeautifulSoup(source, 'xml')
         result = soup.find('returncode').text
 
         try:
@@ -166,20 +166,33 @@ class BBBMeeting(models.Model):
     @classmethod
     def get_meeting_info(self, meetingID, password):
         call_api = 'getMeetingInfo'
-        parameters ={
+        parameters =parse.urlencode({
             'meetingID': meetingID,
-            'password' : password
-        }
+            'password' : password,
+        })
 
         secret_url = create_paramater_url(call_api, parameters)
         url_api = settings.BBB_URL+call_api+'?'+secret_url
         result = soup_api(url_api)
-        print(result)
+        soup = BeautifulSoup(result, 'xml')
+        info={}
         if result:
-            if result.find('returcode').text == 'SUCCESS':
-                return 'SUCCESS'
-            else:
-                return 'FAILED'
+                info['meetingName']=soup.find('meetingName').text,
+                info['meetingID']=soup.find('meetingID').text,
+                info['internalMeetingID']=soup.find('internalMeetingID').text,
+                info['createDate']=soup.find('createDate').text,
+                info['attendeePW']=soup.find('attendeePW').text,
+                info['moderatorPW']=soup.find('moderatorPW').text,
+                info['duration']=soup.find('duration').text,
+                info['recording']=soup.find('recording').text,
+                # info['startTime']= soup.find('startTime'),
+                # info['endTime']= soup.find('endTime').text,
+                info['attendees']= soup.find('attendees').text
+
+
+        return info
+
+
 
 
     # === -> get meeting info ==============================================

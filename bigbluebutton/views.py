@@ -1,8 +1,8 @@
-from django.http import QueryDict
 
-from django.http import QueryDict
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+import json
 
 from .forms import CreateMeetingForm
 from .models import BBBMeeting
@@ -29,7 +29,6 @@ def index(request):
         'form': CreateMeetingForm()
     }
 
-   print(BBBMeeting.get_meetings_list())
    return render(request, 'bbb/index.html', context)
 
 
@@ -57,22 +56,29 @@ def create_meeting(request, meetingID):
 def join_meeting(request, meetingID):
     meeting = BBBMeeting.objects.get(meetingID=meetingID)
     full_name = 'User-01'
-    passwd = getattr(meeting, 'moderatorPW')
+    password = getattr(meeting, 'moderatorPW')
 
-    join_url = BBBMeeting.join_meeting(meetingID, passwd, full_name)
-    print(join_url)
+    join_url = BBBMeeting.join_meeting(meetingID, password, full_name)
+
 
     return redirect(join_url)
 
 
-
-def get_join_meeting(request, meeting_id, moderator_pw, full_name) :
-    url = BBBMeeting.join_meeting(meeting_id, moderator_pw, full_name)
-    return redirect(url)
-
 def end_meeting(request, meetingID):
 
     meeting = BBBMeeting.objects.get(meetingID=meetingID)
-    moderatorPW=getattr(meeting, 'moderatorPW')
-    BBBMeeting.end_meeting(meetingID, moderatorPW)
+    password = getattr(meeting, 'moderatorPW')
+    BBBMeeting.end_meeting(meetingID, password)
     return redirect('/')
+
+
+def info_meeting(request, meetingID):
+
+    meeting = BBBMeeting.objects.get(meetingID=meetingID)
+    password = getattr(meeting, 'moderatorPW')
+    info = BBBMeeting.get_meeting_info(meetingID, password)
+
+
+    return JsonResponse(info)
+
+

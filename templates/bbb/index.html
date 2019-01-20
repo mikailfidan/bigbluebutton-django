@@ -64,7 +64,6 @@
                           <th>Meeting ID</th>
                            <th>Duration</th>
                           <th>Status</th>
-
                         </tr>
                       </thead>
                       <tbody>
@@ -78,10 +77,12 @@
                             {% if meeting.running == 'true' %}
                              <span class="badge badge-success"  href="{% url 'end' meeting.meetingID %}"> running </span>
                              {% else %}
-                                 <span class="badge badge-warning"  href="{% url 'create' meeting.meetingID %}"> notrunning </span>
+                                 <span class="badge badge-secondary"  href="{% url 'create' meeting.meetingID %}"> notrunning </span>
                                  <a class="badge badge-primary"  href="{% url 'join' meeting.meetingID %}"> join </a>
+                                 <a data-toggle="modal" data-target="#exampleModal" data-id="{{ meeting.meetingID }}" class="badge badge-warning getinfo" href="#"> info </a>
                             {% endif %}
-
+                        {% empty %}
+                        <td>no meeting</td>
                         </tr>
 
                   {% endfor %}
@@ -94,6 +95,30 @@
 </div>
 
 
+
+
+<!-- info Modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title" id="exampleModalLabel"> meeting info </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+
+            <tbody class="info-tbody">
+
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- info Modal -->
 
 
 
@@ -138,5 +163,42 @@
          </div>
     </div>
 </div>
+    <div id="like">
+
+    </div>
 {% endblock %}
 
+{% block js %}
+
+ <script>
+   $(document).ready(function() {
+
+       $('.getinfo').click(function () {
+           meetingID = $(this).data('id');
+            $('.info-thead').html('');
+            $('.info-tbody').html('');
+           $.ajax({
+               type: "GET",
+               url: "infomeeting/" + meetingID,
+               dataType: 'json',
+               success: function (data) {
+                   $.each(data, function (key, value) {
+                       // $('.info-thead').append(
+                       //     '<th>' + key + '</th>'
+                       // );
+
+                       $('.info-tbody').append(
+                           '<tr><th>'+ key +'</th><td>' + value +  '</td>'
+                       );
+                   })
+               }
+           })
+
+       });
+
+   });
+ </script>
+
+
+
+{% endblock %}

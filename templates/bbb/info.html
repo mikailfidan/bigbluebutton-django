@@ -1,0 +1,47 @@
+{% extends 'bbb/base.html' %}
+
+{% block main %}
+
+ <div class="card-body">
+     <a href="/" class="btn btn-sm btn-outline-secondary">back home </a>
+     <hr>
+
+     <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">meetingName</th>
+      <th scope="col">meetingID</th>
+      <th scope="col">internalMeetingID</th>
+       <th scope="col">createDate</th>
+      <th scope="col">attendeePW</th>
+      <th scope="col">moderatorPW</th>
+       <th scope="col">duration</th>
+       <th scope="col">recording</th>
+      <th scope="col">attendees</th>
+      <th scope="col">moderatorCount</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+       <td>{{info.meetingName}}</td>
+       <td>{{info.meetingID}}</td>
+       <td>{{info.internalMeetingID}}</td>
+       <td>{{info.createDate}}</td>
+       <td>{{info.attendeePW}}</td>
+       <td>{{info.moderatorPW}}</td>
+       <td>{{info.duration}}</td>
+       <td>{{info.recording}}</td>
+       <td>{{info.attendees}}</td>
+       <td>{{info.moderatorCount}}</td>
+   </tr>
+
+
+
+
+  </tbody>
+</table>
+
+
+ </div>
+{% endblock %}
