@@ -42,10 +42,10 @@ def create_paramater_url(call_api, parameters):
 
 class BBBMeeting(models.Model):
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     meetingID = models.CharField(max_length=100, unique=True)
-    attendeePW = models.CharField(max_length=100, unique=True)
-    moderatorPW = models.CharField(max_length=100, unique=True)
+    attendeePW = models.CharField(max_length=100)
+    moderatorPW = models.CharField(max_length=100)
     duration = models.IntegerField(blank=False,  default=None)
     record= models.BooleanField(blank=False, default=None)
     allowStartStopRecording = models.BooleanField(blank=False, default=None)

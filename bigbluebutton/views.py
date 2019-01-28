@@ -49,7 +49,7 @@ def create_meeting(request, meetingID):
         'form': CreateMeetingForm()
     }
 
-    return render(request, 'bbb/index.html', context)
+    return redirect('/')
 
 
 
@@ -59,9 +59,21 @@ def join_meeting(request, meetingID):
     password = getattr(meeting, 'moderatorPW')
 
     join_url = BBBMeeting.join_meeting(meetingID, password, full_name)
-
-
     return redirect(join_url)
+
+
+def attjoin(request):
+
+
+        meetingID = request.POST.get('meetingID')
+        attname = request.POST.get('attname')
+        attpassword = request.POST.get('attpassword')
+        print(request.POST.get('meetingID'))
+        join_url = BBBMeeting.join_meeting(meetingID, attpassword, attname)
+        print(join_url)
+
+        return redirect(join_url)
+
 
 
 def end_meeting(request, meetingID):

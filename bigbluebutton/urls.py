@@ -8,4 +8,5 @@ urlpatterns = [
     path('joinmeeting/<meetingID>',views.join_meeting, name='join'),
     path('endmeeting/<meetingID>',views.end_meeting, name='end'),
     path('infomeeting/<meetingID>',views.info_meeting, name='info'),
+    path('attjoin', views.attjoin, name='attjoin'),
 ]

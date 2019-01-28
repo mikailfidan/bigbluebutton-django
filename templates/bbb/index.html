@@ -76,10 +76,11 @@
                              <td>
                             {% if meeting.running == 'true' %}
                              <span class="badge badge-success"  href="{% url 'end' meeting.meetingID %}"> running </span>
+                             <a data-toggle="modal" data-target="#joinAttendeForm" data-id="{{ meeting.meetingID }}" class="badge badge-info joinatt" href="#"> join as att </a>
                              {% else %}
-                                 <span class="badge badge-secondary"  href="{% url 'create' meeting.meetingID %}"> notrunning </span>
-                                 <a class="badge badge-primary"  href="{% url 'join' meeting.meetingID %}"> join </a>
-                                 <a data-toggle="modal" data-target="#exampleModal" data-id="{{ meeting.meetingID }}" class="badge badge-warning getinfo" href="#"> info </a>
+                                 <span class="badge badge-secondary"   href="{% url 'create' meeting.meetingID %}"> notrunning </span>
+                                 <a class="badge badge-primary"  href="{% url 'join' meeting.meetingID %}"> join as mod </a>
+                                 <a data-toggle="modal" data-target="#infoModal" data-id="{{ meeting.meetingID }}" class="badge badge-warning getinfo" href="#"> info </a>
                             {% endif %}
                         {% empty %}
                         <td>no meeting</td>
@@ -95,30 +96,6 @@
 </div>
 
 
-
-
-<!-- info Modal -->
-<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-bottom-0">
-        <h5 class="modal-title" id="exampleModalLabel"> meeting info </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table">
-
-            <tbody class="info-tbody">
-
-            </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- info Modal -->
 
 
 
@@ -161,18 +138,82 @@
                </div>
             </div>
          </div>
-    </div>
 </div>
-    <div id="like">
 
+
+
+
+
+<!-- info Modal -->
+<div class="modal fade bd-example-modal-lg" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title" id="infoModalLabel"> meeting info </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+
+            <tbody class="info-tbody">
+
+            </tbody>
+        </table>
+      </div>
     </div>
+  </div>
+</div>
+<!-- info Modal -->
+
+
+
+<!-- join attendee form Modal -->
+<div class="modal fade" id="joinAttendeForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title" id="joinAttendeFormLabel"> join as attendee </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+
+            <tbody>
+               <form class="info-tbody" action="{% url 'attjoin' %}" method="POST"> {% csrf_token %}
+                    <div class="">
+                     <select class="attjoinopt form-control" name="meetingID" class="form-control">
+
+                     </select>
+                    </div>
+
+                    <input name="attpassword" class="form-control form-control-sm m-2" type="text" placeholder="attendee password">
+                    <input name="attname" class="form-control form-control-sm m-2" type="text" placeholder="attendee name">
+                    <button type="submit"  class="btn btn-dark m-2 btn-sm"> Join </button>
+
+               </form>
+
+            </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+<!-- join attendee form -->
+
+
+
+</div>
+
 {% endblock %}
 
 {% block js %}
 
  <script>
    $(document).ready(function() {
-
+//>>>>>info modal===========================================================
        $('.getinfo').click(function () {
            meetingID = $(this).data('id');
             $('.info-thead').html('');
@@ -196,7 +237,23 @@
 
        });
 
+//<<<<<info modal ==============================================================
+
+
+
+//>>>>> join as attendee========================================================
+
+      $('.joinatt').click(function () {
+          $('.attjoinopt').empty()
+          meetingID = $(this).data('id');
+          $('.attjoinopt').append(new Option(meetingID, meetingID));
+
+      })
+
+//<<<<< join as attendee==============================================================
+
    });
+
  </script>
 
 
