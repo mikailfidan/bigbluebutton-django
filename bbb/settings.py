@@ -114,8 +114,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-BBB_URL = 'http://192.168.1.102/bigbluebutton/api/'
-BBB_SECRET = 'c945b762386e3bf4a7bb7a5c3e529786'
+BBB_URL = 'https://kurstv.xyz/bigbluebutton/'
+BBB_SECRET = ' 3205b7096e0a0b67ca826f573a9cbf40'
 
 
 # Static files (CSS, JavaScript, Images)
